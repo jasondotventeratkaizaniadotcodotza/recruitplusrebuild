@@ -1,0 +1,12 @@
+<div class="container">
+    <a class="btn btn-large btn-primary pull-right" href="<?php echo $this->baseUrl('/job-listing/add');?>">Create a Job Advert</a>
+    <h2>Newest Job Adverts</h2>
+    <ul>
+        <?php foreach($this->jobListings as $j){ ?>
+        <li>
+            <a href="<?php echo $this->baseUrl('/job-listing/view?j=' . $j['id']);?>"><?php echo $j['title'];?></a>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+<?php echo $this->partial('/partials/system-message.phtml', array('message' => $this->message)); ?>

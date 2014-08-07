@@ -1,0 +1,3 @@
+upstream application {
+    server <%= node[:application]['backend']['host'] %>:<%= node['application']['backend']['port'] %>;
+}

@@ -1,0 +1,11 @@
+server {
+  listen 80;
+  server_name  <%= node[:application]['server_name'] %> *.<%= node[:application]['server_name'] %>;
+  access_log  <%= node[:nginx][:log_dir] %>/localhost.access.log;
+
+  location / {
+    proxy_pass http://application;
+    proxy_set_header  Host $host;
+    proxy_set_header  X-Real-IP  $remote_addr;
+  }
+}

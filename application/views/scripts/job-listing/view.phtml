@@ -1,0 +1,42 @@
+<div class="container">
+    <a href="javascript:history.go(-1)" class="btn btn-large btn-primary pull-left">Back</a>
+    <h1 class="offset4"><?php echo $this->jobListing['title']; ?></h1>
+    <br/>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <td>Key</td>
+                <td>Value</td>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->jobListing as $key => $value) { ?>
+                <?php
+                if ($value instanceof \RM\Entity\User) {
+                    $key = 'User';
+                    $value = $value->getEmail();
+                }
+                if ($value instanceof \RM\Entity\ListItems) {
+                    $value = $value->getName();
+                }
+                if ($value instanceof \DateTime) {
+                    $value = $value->format('d/m/Y H:00');
+                }
+                if ($value instanceof \RM\Entity\Geolocation){
+                    $key = 'Location';
+                    $value = $value->getLocation();
+                }
+                ?>
+                <tr>
+                    <td><?php echo ucfirst(trim(preg_replace('/(?<=\\w)(?=[A-Z])/', " $1", $key))); ?></td>
+                    <td><?php echo $value; ?></td>
+                </tr>
+            <?php } ?>
+        </tbody>
+        <tfoot></tfoot>
+    </table>
+    <br/>
+    <div class="center">
+        <a href="<?php echo $this->baseUrl('/job-listing/apply?j=') . $this->jobListing['id']; ?>" class="btn btn-large btn-primary">Apply for This Job</a>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<VirtualHost *:8080>
+    ServerName <%= node[:phpmemcacheadmin][:servername] %>
+    DocumentRoot <%= node[:phpmemcacheadmin][:home] %>
+
+    ErrorLog <%= node[:apache][:log_dir] %>/phpmemcacheadmin-error.log
+    CustomLog <%= node[:apache][:log_dir] %>/phpmemcacheadmin-access.log combined
+    LogLevel warn
+
+    <Directory <%= node[:phpmemcacheadmin][:home] %>>
+        Options Indexes FollowSymLinks
+        DirectoryIndex index.php
+    </Directory>
+
+</VirtualHost>

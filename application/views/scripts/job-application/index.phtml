@@ -1,0 +1,98 @@
+<h1 class="offset4">Job Applications</h1>
+<br/>
+<!--<div id="job-application-filters">
+    Filter By Status: <?php echo $this->form; ?> 
+</div>
+<div id="job-application-filters">
+    Order By: <?php echo $this->form; ?> 
+</div>-->
+<br/>
+<div id="job-applications" class="accordion">
+    <?php foreach ($this->jobApplications as $key => $jobApplication) { ?>
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <table class="table table-bordered">
+                    <tr id="<?php echo $jobApplication->getId(); ?>">
+                        <td data-toggle="collapse" data-target="#accordion<?php echo $key + 1; ?>"><?php echo $key + 1; ?></td>
+                        <td data-toggle="collapse" data-target="#accordion<?php echo $key + 1; ?>"><?php echo $jobApplication->getUserId()->getFullName(); ?></td>
+                        <td data-toggle="collapse" data-target="#accordion<?php echo $key + 1; ?>"><?php echo $jobApplication->getUserId()->getEmail(); ?></td>
+                        <td data-toggle="collapse" data-target="#accordion<?php echo $key + 1; ?>"><?php
+    if ($jobApplication->getUserId()->getPhoneNumber() != null) {
+        echo $jobApplication->getUserId()->getPhoneNumber();
+    } else {
+        echo 'No phone number information';
+    }
+        ?>
+                        </td>
+                        <td class="average-rating" data-toggle="collapse" data-target="#accordion<?php echo $key + 1; ?>"><?php
+                        if ($jobApplication->getAverageRecruiterRating() != null) {
+                            echo $jobApplication->getAverageRecruiterRating();
+                        } else {
+                            echo 'N/A';
+                        }
+        ?></td>
+                        <td>
+                            <?php
+                            $form = $this->form;
+                            $form->setAttrib('id', $jobApplication->getId());
+                            $form->getElement('jobApplicationStatus')
+                                    ->setValue($jobApplication->getJobApplicationStatus())
+                                    ->setAttrib('id', $jobApplication->getId());
+                            echo $form;
+                            ?>
+                            <div class="confirmed-application-status-update"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="accordion-body collapse in" id="accordion<?php echo $key + 1; ?>" style="height: auto;">
+                <div class="accordion-inner">
+                    <div id="<?php echo $jobApplication->getId();?>" class="recruiter-ratings">
+                        <?php
+                        $full = 'full';
+                        $empty = 'empty';
+                        $starStart = '<span class="star-rating ';
+                        $starEnd = '">&nbsp;</span>';
+                        $stars = '';
+                        for ($i = 0; $i < 5; $i++) {
+                            if ($i < $jobApplication->getAverageRecruiterRating()) {
+                                $stars .= $starStart . $full . $starEnd;
+                            } else {
+                                $stars .= $starStart . $empty . $starEnd;
+                            }
+                        }
+                        ?>
+                        <div class="recruiter-stars"><?php echo $stars; ?></div>
+                        <div class="recruiter-comment">
+
+                        </div>
+                    </div>
+                    <h3>
+                        <?php echo $jobApplication->getUserId()->getFullName(); ?>
+                    </h3>
+                    <br/>
+                    <h3>Byline</h3>
+                    <p>
+                        <?php
+                        if ($jobApplication->getByline() != '') {
+                            echo $jobApplication->getByline();
+                        } else {
+                            echo 'This user does not have its byline information filled out for this application.';
+                        }
+                        ?>
+                    </p>
+                    <h3>Cover Letter</h3>
+                    <p>
+                        <?php
+                        if ($jobApplication->getCoverLetter() != '') {
+                            echo $jobApplication->getCoverLetter();
+                        } else {
+                            echo 'This user does not have its cover letter information filled out for this application';
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+<?php } ?>
+</div>

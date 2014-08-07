@@ -1,0 +1,24 @@
+## Application
+app.name = RecruitPlus
+app.env = development
+app.rewritebase = /
+
+## Database
+db.driver = pdo_mysql
+db.host = 33.33.33.12
+db.port = 3306
+db.username = db
+db.password = 1234
+db.database = recruitplus
+
+## Smtp Email
+email.username = an_email@gmail.com
+email.password = email_password
+email.port = 465
+email.ssl = ssl
+
+# Database Deployment
+dbdeploy.dir = data/dbdeploy
+
+# Path to Applications
+apps.mysql = mysql

@@ -1,0 +1,33 @@
+<VirtualHost *:80>
+    ServerName <%= node[:phpmyadmin][:servername] %>
+    DocumentRoot /usr/share/phpmyadmin
+
+    ErrorLog <%= node[:apache][:log_dir] %>/pma-error.log
+    CustomLog <%= node[:apache][:log_dir] %>/pma-access.log combined
+    LogLevel warn
+
+    <Directory /usr/share/phpmyadmin>
+        Options Indexes FollowSymLinks
+        DirectoryIndex index.php
+
+        <IfModule mod_php5.c>
+                AddType application/x-httpd-php .php
+
+                php_flag magic_quotes_gpc Off
+                php_flag track_vars On
+                php_flag register_globals Off
+                php_value include_path .
+        </IfModule>
+
+    </Directory>
+
+    <Directory /usr/share/phpmyadmin/libraries>
+        Order Deny,Allow
+        Deny from All
+    </Directory>
+    <Directory /usr/share/phpmyadmin/setup/lib>
+        Order Deny,Allow
+        Deny from All
+    </Directory>
+
+</VirtualHost>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="RecruitPlus" default="deploy" basedir=".">
+    <tstamp/>
+    <property file="build.properties"/>
+
+    <!-- filesets -->
+    <fileset dir="." id="writables">
+        <exclude name="**/.svn"/>
+        <exclude name="**/*.bak"/>
+        <exclude name="**/*~"/>
+        <exclude name="**/~*"/>
+        <exclude name="data/logs/*-access.log"/>
+        <exclude name="data/logs/*-error.log"/>
+        <exclude name="data/logs/*error.log" />
+        <exclude name="data/logs/*access.log" />
+        <include name="data/**/*"/>
+    </fileset>
+
+    <fileset dir="." id="executables">
+        <exclude name="**/*"/>
+        <include name="scripts/doctrine" />
+    </fileset>
+    
+    <!-- clean -->
+    <target name="clean">
+        <echo msg="Clean ..."/>
+        <delete dir="${build.dir}" includeemptydirs="true" />
+    </target>
+
+    <!-- prepare -->
+    <target name="prepare">
+        <echo msg="Preparing build"/>
+    </target>
+    
+    <target name="deploy" description="Deploy application" depends="prepare,setup-files"></target>
+
+    <!-- setup-files -->
+    <target name="setup-files" description="Setup files">
+        <echo msg="Setup files ..."/>
+        <copy file="application/configs/application.ini.dist" tofile="application/configs/application.ini" overwrite="true">
+            <filterchain>
+                <replacetokens begintoken="##" endtoken="##">
+                    <token key="db.driver" value="${db.driver}"/>
+                    <token key="db.database" value="${db.database}"/>
+                    <token key="db.host" value="${db.host}"/>
+                    <token key="db.port" value="${db.port}"/>
+                    <token key="db.username" value="${db.username}"/>
+                    <token key="db.password" value="${db.password}"/>
+
+                    <token key="email.username" value="${email.username}"/>
+                    <token key="email.password" value="${email.password}"/>
+                    <token key="email.port" value="${email.port}"/>
+                    <token key="email.ssl" value="${email.ssl}"/>
+                    
+                    <token key="app.timezone" value="${app.timezone}"/>
+                    <token key="app.name" value="${app.name}"/>
+                    <token key="app.lang" value="${app.lang}"/>
+
+                    <token key="facebook.appId" value="${facebook.appId}"/>
+                    <token key="facebook.secret" value="${facebook.secret}"/>
+                    <token key="facebook.fileUpload" value="${facebook.fileUpload}"/>
+                    <token key="facebook.pageId" value="${facebook.pageId}"/>
+
+                    <token key="solr.protocol" value="${solr.protocol}"/>
+                    <token key="solr.host" value="${solr.host}"/>
+                    <token key="solr.port" value="${solr.port}"/>
+                    <token key="solr.path" value="${solr.path}"/>
+                    <token key="solr.core" value="${solr.core}"/>
+                    
+                    <token key="google.analytics.account" value="${ga.account}"/>
+                    <token key="google.analytics.domain" value="${ga.domain}"/>
+                    <token key="google.analytics.enabled" value="${ga.enabled}"/>
+                </replacetokens>
+            </filterchain>
+        </copy>
+        
+        <copy file="public/htaccess.dist" tofile="public/.htaccess" overwrite="true">
+            <filterchain>
+                <replacetokens begintoken="##" endtoken="##">
+                    <token key="rewrite.base" value="${app.rewritebase}"/>
+                </replacetokens>
+            </filterchain>
+        </copy>
+
+        <echo>Changing file permissions...</echo>
+        
+        <chmod mode="0777">
+            <fileset dir=".">
+                <include name="data/**" />
+                <include name="library/RM/Entity/Proxy/**" />
+            </fileset>
+<!--            <fileset refid="writables"/>-->
+        </chmod>
+        <chmod mode="0755">
+            <fileset refid="executables"/>
+        </chmod>
+    </target>
+
+    <!-- migrate -->
+    <target name="migrate" description="Database Deploy">  
+        <echo>--------------------------------------------------</echo>
+        <echo>              Database Deploy</echo>
+        <echo>--------------------------------------------------</echo>
+
+        <taskdef name="dbdeploy" classname="phing.tasks.ext.dbdeploy.DbDeployTask"/>
+
+        <property name="build.dbdeploy.schemafile" value="${dbdeploy.dir}/scripts/dbdeploy-schema.sql"/>
+        <property name="build.dbdeploy.deployfile" value="${dbdeploy.dir}/scripts/deploy-${DSTAMP}${TSTAMP}.sql" />
+        <property name="build.dbdeploy.undofile" value="${dbdeploy.dir}/scripts/undo-${DSTAMP}${TSTAMP}.sql" />
+
+        <exec
+            command="${apps.mysql} -h${db.host} -u${db.username} -p${db.password} -e 'CREATE DATABASE IF NOT EXISTS ${db.database};'"
+            dir="."
+            checkreturn="true" />
+
+        <exec
+            command="${apps.mysql} -h${db.host} -u${db.username} -p${db.password} ${db.database} &lt; ${build.dbdeploy.schemafile}"
+            dir="."
+            checkreturn="true" />
+
+        <dbdeploy
+            url="mysql:host=${db.host};dbname=${db.database}"
+            userid="${db.username}"
+            password="${db.password}"
+            dir="${dbdeploy.dir}/deltas"
+            outputfile="${build.dbdeploy.deployfile}"
+            undooutputfile="${build.dbdeploy.undofile}" />
+
+        <exec
+            command="${apps.mysql} -h${db.host} -u${db.username} -p${db.password} ${db.database} &lt; ${build.dbdeploy.deployfile}"
+            dir="."
+            checkreturn="true" />
+    </target>
+
+    <!-- test -->
+    <target name="test" depends="prepare,migrate">
+        <echo msg="Running tests, generating reports..." />
+    </target>
+
+    <target name="version">
+        <exec
+            command="svn info | grep 'Revision:' | awk '{ print $2 };' > .version"
+            dir="." />
+    </target>
+
+    <target name="help">
+        <echo>
+    Welcome to use "${app.name}" build script!
+    --------------------------------
+    You may use the following command format to build a target:
+
+              phing   &lt;target name&gt;
+
+    where &lt;target name&gt; can be one of the following:
+
+    - deploy    : deploy application
+    - migrate   : database migration
+    - clean     : clean up the build
+    - test      : run unit testing, code coverage etc...
+    - testdata  : insert test data to database
+        </echo>
+    </target>
+
+</project>

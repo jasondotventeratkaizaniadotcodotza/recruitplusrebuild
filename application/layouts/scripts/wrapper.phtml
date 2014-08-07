@@ -1,0 +1,36 @@
+<?php
+echo $this->docType();
+$this->headLink()->appendStylesheet($this->baseUrl('/css/bootstrap.min.css'))
+        ->appendStylesheet($this->baseUrl('/css/bootstrap-responsive.min.css'))
+        ->appendStylesheet($this->baseUrl('/css/main.css'));
+$this->headScript()->appendFile('/js/jquery-1.7.2.min.js')
+        ->appendFile('/js/jquery-ui-1.8.16.custom.min.js')
+        ->appendFile('/js/bootstrap.min.js')
+//        ->appendFile('/js/bootstrap-tooltip.js')
+//        ->appendFile('/js/bootstrap-typeahead.js')
+//        ->appendFile('/js/bootstrap-transition.js')
+//        ->appendFile('/js/bootstrap-collapse.js')
+        ->appendFile('/js/nicEdit.js')
+        ->appendFile('/js/scripts.js');
+?>
+<html>
+    <head>
+        <?php echo $this->headTitle(); ?>
+        <?php echo $this->headMeta(); ?>
+        <?php echo $this->headLink(); ?>
+        <?php echo $this->headStyle(); ?>
+    </head>
+    <body>
+        <?php /* NESTED LAYOUT SUPPORT */ ?>
+        <?php if ($this->layout()->nestedLayout): ?>
+            <?php $this->layout()->setLayout($this->layout()->nestedLayout); ?>
+        <?php else: ?>
+            <?php $this->layout()->setLayout('default'); ?>
+        <?php endif; ?>
+        <?php echo $this->layout()->render(); ?>
+
+        <?php /* OUTPUT JAVASCRIPT */ ?>
+        <?php echo $this->headScript(); ?>
+        <?php echo $this->inlineScript();   ?>
+    </body>
+</html>

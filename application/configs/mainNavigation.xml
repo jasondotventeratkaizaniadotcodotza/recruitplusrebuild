@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <production>
+        <resources>
+            <navigation>
+                <pages>
+                    <home>
+                        <label>Home</label>
+                        <controller>index</controller>
+                        <action>index</action>
+                        <resource>index/index</resource>
+                        <privilege></privilege>
+                    </home>
+<!--                    <profile>
+                        <label>My Account</label>
+                        <controller>user</controller>
+                        <action>index</action>
+                        <resource>user/index</resource>
+                        <privilege></privilege>
+                    </profile>-->
+                    <job-listing>
+                        <label>Job Listings</label>
+                        <controller>job-listing</controller>
+                        <action>index</action>
+                        <resource>job-listing/index</resource>
+                        <privilege></privilege>
+                    </job-listing>
+<!--                    <feeds>
+                        <label>Feeds</label>
+                        <controller>feed</controller>
+                        <action>rss</action>
+                        <resource>feed/rss</resource>
+                        <privilege></privilege>
+                    </feeds>-->
+                    <login>
+                        <label>Login</label>
+                        <controller>login</controller>
+                        <action>index</action>
+                        <resource>login/index</resource>
+                        <privilege></privilege>
+                    </login>
+                    <logout>
+                        <label>Logout</label>
+                        <controller>login</controller>
+                        <action>logout</action>
+                        <resource>login/logout</resource>
+                        <privilege></privilege>
+                    </logout>
+                </pages>
+            </navigation>
+        </resources>
+    </production>
+    <development extends="production"></development>
+    <testing extends="production"></testing>
+    <staging extends="production"></staging>
+</config>

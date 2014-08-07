@@ -1,0 +1,116 @@
+<dataConfig>
+    <dataSource type="JdbcDataSource" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost/appofapps" user="root" password="freemail"/>
+
+    <!-- doc: applications -->
+    <document name="applications">
+        <entity name="application"
+                pk="id"
+                transformer="TemplateTransformer"
+                query="select *, 'applications' as doc_type from applications"
+                deltaImportQuery="select *, 'applications' as doc_type from applications where id = ${dataimporter.delta.id}"
+                deltaQuery="select id from applications where updated_at > '${dataimporter.last_index_time}'">
+
+            <field column="id" template="${application.id}" />
+            <field name="mysql_id" column="id" />
+            <field name="slug" column="slug" />
+            <field name="name" column="name" />
+            <field name="description" column="description" />
+            <field name="platform_id" column="platform_id" />
+            <field name="store_rating" column="rating" />
+            <field name="created_at" column="created_at" />
+            <field name="updated_at" column="updated_at" />
+            <field name="type" column="doc_type" />
+
+            <!-- publisher -->
+            <entity name="publisher"
+                    pk="id"
+                    query="select name from publishers where id='${application.publisher_id}' LIMIT 1"
+                    deltaQuery="select id from publishers where updated_at > '${dataimporter.last_index_time}'"
+                    parentDeltaQuery="select id from applications where publisher_id = ${publisher.id}">
+
+                <field name="publisher" column="name" />
+            </entity>
+
+            <!-- primary image -->
+            <entity name="image"
+                    query="select CONCAT('/assets/i/50/', i.slug) AS small_image_url, CONCAT('/assets/i/100/', i.slug) AS medium_image_url, CONCAT('/assets/i/200/', i.slug) AS large_image_url from images i inner join application_images as ai on i.id = ai.image_id where ai.application_id='${application.id}' AND ai.image_type=1 LIMIT 1"
+                    deltaQuery="select id from images where is_deleted = 0 and updated_at > '${dataimpoter.last_index_time}'"
+                    parentDeltaQuery="select application_id as id where image_id = ${image.id}">
+
+                <field name="small_image_url" column="small_image_url" />
+                <field name="medium_image_url" column="medium_image_url" />
+                <field name="large_image_url" column="large_image_url" />
+            </entity>
+
+            <!-- screenshots -->
+            <entity name="screenshot"
+                    query="select i.slug from images i inner join application_images as ac on ac.image_id = i.id where ac.application_id='${application.id}' and ac.image_type = 0">
+
+                <field name="screenshots" column="slug" />
+            </entity>
+
+            <!-- favourites -->
+            <entity name="favourite"
+                    query="select user_id from user_applications where application_id='${application.id}' and is_deleted = 0"
+                    deltaQuery="select id from user_applications where created_at > '${dataimporter.last_index_time}'"
+                    parentDeltaQuery="select application_id as id from user_applications where id = ${favourite.id}">
+
+                <field name="favourites" column="user_id" />
+            </entity>
+
+            <!-- ratings -->
+            <entity name="rating"
+                    query="select user_id from user_ratings where app_id='${application.id}'"
+                    deltaQuery="select id from user_ratings where created_at > '${dataimporter.last_index_item}'"
+                    parentDeltaQuery="select app_id as id from user_ratings where id = ${rating.id}">
+
+                <field name="ratings" column="user_id" />
+            </entity>
+
+            <!-- categories -->
+            <entity name="category"
+                    query="select c.slug from platform_categories c inner join application_categories as ac on ac.category_id = c.id where application_id='${application.id}' and is_deleted = 0"
+                    deltaQuery="select id from platform_categories where updated_at > '${dataimporter.last_index_time}'"
+                    parentDeltaQuery="select application_id as id from application_categories where category_id = ${category.id}">
+
+                <field name="categories" column="slug" />
+            </entity>
+
+            <!-- user rating -->
+            <entity name="user_rating"
+                    query="select avg(rating) as avg, count(user_id) as users from user_ratings where app_id='${application.id}'">
+
+                <field name="user_rating" column="avg" />
+                <field name="total_user_ratings_i" column="users" />
+            </entity>
+
+            <!-- price -->
+            <entity name="application_price"
+                   query="select value from application_meta where application_id='${application.id}' and field='price' limit 1"
+                   deltaQuery="select id from application_meta where field = 'price' and updated_at > '${dataimporter.last_index_time}'"
+                   parentDeltaQuery="select application_id as id from application_meta where id = '${application_price.id}'">
+
+                    <field name="price" column="value" />
+            </entity>
+
+            <!-- version -->
+            <entity name="application_version"
+                   query="select value from application_meta where application_id='${application.id}' and field='version' limit 1"
+                   deltaQuery="select id from application_meta where field = 'version' and updated_at > '${dataimporter.last_index_time}'"
+                   parentDeltaQuery="select application_id as id from application_meta where id = '${application_version.id}'">
+
+                   <field name="version" column="value" />
+            </entity>
+
+            <!-- store_url -->
+            <entity name="application_store_url"
+                   query="select value from application_meta where application_id='${application.id}' and field='store_url' limit 1"
+                   deltaQuery="select id from application_meta where field = 'store_url' and updated_at > '${dataimporter.last_index_time}'"
+                   parentDeltaQuery="select application_id as id from application_meta where id = '${application_store_url.id}'">
+
+                   <field name="store_url" column="value" />
+            </entity>
+
+        </entity>
+    </document>
+</dataConfig>

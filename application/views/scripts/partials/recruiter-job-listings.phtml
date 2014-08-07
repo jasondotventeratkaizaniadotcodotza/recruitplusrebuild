@@ -1,0 +1,43 @@
+<a href="<?php echo $this->baseUrl('/job-listing/add'); ?>" class="btn btn-large btn-primary pull-left">Add</a>
+<h1 class="offset4">Job Listings</h1>
+<br/>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <td>#</td>
+            <td>Title</td>
+            <td>Status</td>
+            <td>Industry</td>
+            <td>Category</td>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($this->jobListings as $key => $jobListing) { ?>
+            <tr id="<?php echo $jobListing['id']; ?>">
+                <td><?php echo $key + 1; ?></td>
+                <td><?php ($jobListing['title']) ? $title = $jobListing['title'] : $title = '&nbsp;'; ?>
+                    <a href="<?php echo $this->baseUrl('/job-listing/view?j=' . $jobListing['id']); ?>"><?php echo $title; ?></a>
+                </td>
+                <td><?php
+        ($jobListing['jobListingStatus']->getName()) ? $status = $jobListing['jobListingStatus']->getName() : $status = '&nbsp;';
+        echo $status;
+            ?></td>
+                <td><?php
+                ($jobListing['industry']->getName()) ? $industry = $jobListing['industry']->getName() : $industry = '&nbsp;';
+                echo $industry;
+            ?></td>
+                <td><?php
+                ($jobListing['category']->getName()) ? $category = $jobListing['category']->getName() : $category = '&nbsp;';
+                echo $category;
+            ?></td>
+                <td class="controls">
+                    <a href="<?php echo $this->baseUrl('/job-listing/edit?j=') . $jobListing['id']; ?>" class="btn btn-small btn-info"><i class="icon-pencil icon-white"></i> Edit</a>
+                    <a href="<?php echo $this->baseUrl('/job-listing/delete?j=') . $jobListing['id']; ?>" class="btn btn-danger"><i class="icon-trash icon-white"></i> Delete</a>
+                    <a href="<?php echo $this->baseUrl('/job-listing/add?j=') . $jobListing['id']; ?>" class="btn"><i class="icon-file"></i> Copy</a>
+                    <a href="<?php echo $this->baseUrl('/job-application?j=') . $jobListing['id']; ?>" class="btn btn-success"><i class="icon-list icon-white"></i> Applications <?php echo '(' . $jobListing['applicationCount'] . ')';?></a>
+                </td>
+            </tr>
+        <?php } ?>
+    </tbody>
+    <tfoot></tfoot>
+</table>

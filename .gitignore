@@ -1,0 +1,14 @@
+application/configs/application.ini
+build.properties
+public/.htaccess
+nbprojects/private
+**/*~
+**/*.svn
+**/*.swp
+.vagrant
+.DS_Store
+data/logs/*
+data/backups/*
+data/dbdeploy/scripts/*
+data/attachments/*
+tmp/session/*

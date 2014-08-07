@@ -1,0 +1,27 @@
+<?php
+$auth = Zend_Auth::getInstance();
+$user = $auth->getStorage()->read();
+$role = $user->getRole()->getRole();
+if (!$role)
+    $role = 'guest';
+$cacheDriver = Zend_Registry::get('cacheDriver');
+$acl = $cacheDriver->fetch('ACL_' . $role);
+if($acl){
+?>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <?php
+            try {
+                echo $this->navigation()->menu()
+                        ->setAcl($acl)
+                        ->setRole($role)
+                        ->setUlClass('nav');
+            } catch (Exception $e) {
+                RM_Logger::info($e->getMessage());
+            }
+            ?>
+        </div>
+    </div>
+</div>
+<?php } ?>

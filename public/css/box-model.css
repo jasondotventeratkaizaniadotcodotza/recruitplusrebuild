@@ -1,0 +1,60 @@
+/* 
+    Document   : box-model
+    Created on : 29.05.2012, 16:54:59
+    Author     : User
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.margin-left-0{ 
+    margin-left:0;
+}
+.center{
+    text-align: center;
+}
+#header .navbar{
+    margin-bottom: 70px;
+}
+table td.controls{
+    text-align: center;
+    width: 400px;
+}
+.accordion-heading td{
+    padding-top:25px;
+}
+td.average-rating{
+    background: url('../img/star.png') no-repeat center;
+    text-align: center;
+    width:50px;
+    font-size:12px;
+}
+.accordion-group{
+    margin-bottom:0;
+}
+span.star-rating{
+    width:24px;
+    height:24px;
+    float:left;
+}
+span.star-rating.full{
+    background: url('../img/star_full.png') no-repeat center;
+}
+span.star-rating.empty{
+    background: url('../img/star_empty.gif') no-repeat center;
+}
+div.recruiter-ratings{
+    position:absolute;
+    float:left;
+    margin-left:50%;
+    display:block;
+    height:25px;
+    width:120px;
+}
+div.confirmed-application-status-update{
+    background: url('../img/confirmed.gif') no-repeat center;
+    width:24px;
+    height:24px;
+    float:left;
+    margin: 2px 0 0 150px;
+    display:none;
+    position:absolute;
+}

@@ -1,0 +1,22 @@
+<VirtualHost *:80>
+    ServerName <%= node["recruit"]["domain"] %>
+
+    DocumentRoot <%= node["recruit"]["dir"] %>/public
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride All
+    </Directory>
+    <Directory <%= node["recruit"]["dir"] %>/public>
+        SetEnv APPLICATION_ENV <%= node["recruit"]["env"] %>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    Alias /icons/ "/usr/share/apache2/icons/"
+
+    ErrorLog <%= node[:apache][:log_dir] %>/recruit.log
+    CustomLog <%= node[:apache][:log_dir] %>/recruit.log combined
+    LogLevel warn
+</VirtualHost>

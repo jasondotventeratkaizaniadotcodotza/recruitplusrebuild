@@ -1,0 +1,51 @@
+/* 
+    Document   : forms
+    Created on : 28.05.2012, 15:59:07
+    Author     : Csabi
+    Description: This stylesheet contains css markup for forms
+*/
+
+form label.radio{
+    padding-top:5px;
+    width:110px;
+}
+form#JobListing textarea{
+    max-width: 375px;
+}
+form .icon-info-sign{
+    margin-left:5px;
+}
+form ul.help-inline{
+    margin-left:0;
+    margin-top:5px;
+}
+form ul.help-inline li{
+    list-style: none;
+}
+form .controls > div{
+    background-color:#fff;
+    position:relative;
+    float:left;
+    width:368px !important;
+    margin-right:6px;
+}
+form #byline-counter{
+    height: 16px;
+    margin-top: 12px;
+    float: right;
+    font-size: 11px;
+    color: #808080;
+}
+form[name="JobApplication"]{
+    margin: 0;
+    float:left;
+}
+form[name="JobApplication"] dl{
+    margin: 0;
+}
+form[name="JobApplication"] select{
+    margin: 0;
+}
+.accordion-heading table{
+    margin-bottom: 0;
+}

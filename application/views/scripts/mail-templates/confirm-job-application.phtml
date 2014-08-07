@@ -1,0 +1,7 @@
+<h1>Hello <?php echo $this->recipient->getFullName(); ?></h1>
+<div class="container">
+    <p>
+        You have successfully applied to the job application.
+    </p>
+    <a href="<?php echo RECRUITPLUS_URL . $this->baseUrl('/login/check?h=') . $this->loginHash; ?>">Click here to login to your account</a>
+</div>
